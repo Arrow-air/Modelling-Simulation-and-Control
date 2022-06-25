@@ -1,0 +1,88 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://mastergeometry_a_v2 v1.obj" type="ArrayMesh" id=1]
+[ext_resource path="res://scripts/spearhead.cs" type="Script" id=2]
+[ext_resource path="res://scripts/FrontCam.cs" type="Script" id=3]
+[ext_resource path="res://scripts/RearCam.cs" type="Script" id=4]
+[ext_resource path="res://scripts/SideCam.cs" type="Script" id=5]
+[ext_resource path="res://scripts/Environment.cs" type="Script" id=6]
+
+[sub_resource type="BoxShape" id=1]
+extents = Vector3( 329.762, 89.6088, 348.398 )
+
+[sub_resource type="SpatialMaterial" id=5]
+albedo_color = Color( 0.313726, 0.368627, 0.721569, 1 )
+metallic = 0.3
+roughness = 0.0
+emission_enabled = true
+emission = Color( 0.0196078, 0.0196078, 0.0196078, 1 )
+emission_energy = 7.53
+emission_operator = 0
+emission_on_uv2 = false
+clearcoat_enabled = true
+clearcoat = 1.0
+clearcoat_gloss = 1.0
+
+[sub_resource type="BoxShape" id=2]
+extents = Vector3( 40000, 0.5, 40000 )
+
+[sub_resource type="SpatialMaterial" id=4]
+flags_unshaded = true
+albedo_color = Color( 0.164706, 0.258824, 0.180392, 1 )
+uv1_triplanar = true
+
+[sub_resource type="CubeMesh" id=3]
+material = SubResource( 4 )
+size = Vector3( 40000, 1, 40000 )
+
+[node name="Environment" type="Spatial"]
+script = ExtResource( 6 )
+
+[node name="RearCam" type="Camera" parent="."]
+transform = Transform( -4.37114e-08, 0.707107, -0.707107, 0, 0.707107, 0.707107, 1, 3.09086e-08, -3.09086e-08, -250, 200, 0 )
+fov = 120.0
+near = 0.01
+far = 1000.0
+script = ExtResource( 4 )
+
+[node name="FrontCam" type="Camera" parent="."]
+transform = Transform( -4.37114e-08, -0.707107, 0.707107, 0, 0.707107, 0.707107, -1, 3.09086e-08, -3.09086e-08, 100, 200, 0 )
+fov = 120.0
+near = 0.01
+far = 1000.0
+script = ExtResource( 3 )
+
+[node name="SideCam" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 200, 200 )
+fov = 120.0
+near = 0.01
+far = 1000.0
+script = ExtResource( 5 )
+
+[node name="spearhead" type="RigidBody" parent="."]
+transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 77, 50, 0 )
+mass = 10.0
+can_sleep = false
+script = ExtResource( 2 )
+
+[node name="Position3D" type="Position3D" parent="spearhead"]
+
+[node name="CollisionShape" type="CollisionShape" parent="spearhead"]
+transform = Transform( 0.612503, 0, 0, 0, 0.612503, 0, 0, 0, 0.612503, 77, 13, 0 )
+visible = false
+shape = SubResource( 1 )
+
+[node name="MeshInstance" type="MeshInstance" parent="spearhead"]
+transform = Transform( 0.6, 0, 0, 0, -2.62268e-08, 0.6, 0, -0.6, -2.62268e-08, 0, 0, 0 )
+mesh = ExtResource( 1 )
+material/0 = SubResource( 5 )
+
+[node name="Ground" type="StaticBody" parent="."]
+
+[node name="CollisionShape" type="CollisionShape" parent="Ground"]
+visible = false
+shape = SubResource( 2 )
+
+[node name="MeshInstance" type="MeshInstance" parent="Ground"]
+mesh = SubResource( 3 )
+material/0 = null
