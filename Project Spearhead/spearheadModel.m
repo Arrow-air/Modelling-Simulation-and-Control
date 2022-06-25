@@ -62,7 +62,7 @@ F5 = K(2)*w5*w5;
 Tau1 = K(3)*w1*w1;
 Tau2 = -K(3)*w2*w2;
 Tau3 = -K(3)*w3*w3;
-Tau4 = K(3)*w4*w5;
+Tau4 = K(3)*w4*w4;
 
 Tau5 = K(4)*w5*w5;
 
