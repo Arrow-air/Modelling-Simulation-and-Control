@@ -3,9 +3,9 @@ clc;
 close all;
 
 %% Load Data
-l_elevon = importdata('datafiles/l_elevon.dat');
-r_elevon = importdata('datafiles/r_elevon.dat');
-rudder = importdata('datafiles/rudder.dat');
+l_elevon = importdata('l_elevon.dat');
+r_elevon = importdata('r_elevon.dat');
+rudder = importdata('rudder.dat');
 
 le_deflection = l_elevon.data(:,1);
 re_deflection = r_elevon.data(:,1);
@@ -53,6 +53,6 @@ plot(deflection_star,rudder_star_hat,'linewidth',1); % plot function estimate
 legend('Data','Estimate');
 
 %%
-dlmwrite("datafiles/re_w_hat.txt", re_w_hat,' ', 0, 0);
-dlmwrite("datafiles/le_w_hat.txt", le_w_hat,' ', 0, 0);
-dlmwrite("datafiles/rudder_w_hat.txt", rudder_w_hat,' ', 0, 0);
+dlmwrite("re_w_hat.txt", re_w_hat,' ', 0, 0);
+dlmwrite("le_w_hat.txt", le_w_hat,' ', 0, 0);
+dlmwrite("rudder_w_hat.txt", rudder_w_hat,' ', 0, 0);

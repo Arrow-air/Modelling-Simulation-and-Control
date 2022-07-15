@@ -1,6 +1,5 @@
 function [dX] = spearheadModel(k,X,U,adb,l_elevon,r_elevon,rudder)
 %% Xdot = f(X,U)
-dX = zeros(20,1);
 
 %% Mass of the VTOL Craft as Taken From CAD
 M = 20;
@@ -48,12 +47,12 @@ dr = X(19);
 drd = X(20);
 
 %% U = [u1 u2 u3 u4 u5 u6 u7 u8] K = Motor Gain Mau = Time Constant Ku = Input Gain
-K = [1.123*10^-6; 2.25*10^-6; 7.708e-10 * 1000; 7.708e-10 * 1500];
+K = [1.123*10^-6; 2.25*10^-6; 7.708*10^-7; 18.708*10^-7];
 Mtau = [1/44.22; 1/44.22; 1/20];
 Ku = [44.2205*8.18; 44.2205*7.02; 3.6];
 
 F1 = K(1)*w1*w1;
-F2 = K(1)*w2*w2;
+F2 = K(1)*w2*w2;    
 F3 = K(1)*w3*w3;
 F4 = K(1)*w4*w4;
 
@@ -112,9 +111,9 @@ MA = 0.5 * rho * V*V * C * (S * adb_C(5) + eS * le_C(5) + eS * re_C(5) + rS * ru
 NA = 0.5 * rho * V*V * C * (S * adb_C(6) + eS * le_C(6) + eS * re_C(6) + rS * rudder_C(6));
 
 %% 6-DOF Dynamics: dX = [udot vdot wdot pdot qdot rdot xdot ydot zdot phidot thetadot psidot]
-dX1 = FGx + FAx/M + FTx/M - q*w + r*v;# + g*sin(theta);
+dX1 = FGx + FAx/M + FTx/M - q*w + r*v;%# + g*sin(theta);
 dX2 = FGy + FAy/M + FTy/M - r*u + p*w;
-dX3 = FGz + FAz/M + FTz/M - p*v + q*u;# - g*cos(theta);
+dX3 = FGz + FAz/M + FTz/M - p*v + q*u;%# - g*cos(theta);
 dX4 = LA/Ixx + LT/Ixx - q*r*(Izz - Iyy)/Ixx;
 dX5 = MA/Iyy + MT/Iyy - p*r*(Ixx - Izz)/Iyy;
 dX6 = NA/Izz + NT/Izz - p*q*(Iyy - Ixx)/Izz;

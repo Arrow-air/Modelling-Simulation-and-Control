@@ -50,7 +50,7 @@ dX = spearheadModel(0,Xs,Us,adb,l_elevon,r_elevon,rudder);
 
 %% Equilibrium Points
 
-#W_e = ((-4*K(2)) + sqrt((4*K(2))^2 - (4*(-M*g)*(4*K(1)))))/(2*(4*K(1)))*ones(4,1);
+%W_e = ((-4*K(2)) + sqrt((4*K(2))^2 - (4*(-M*g)*(4*K(1)))))/(2*(4*K(1)))*ones(4,1);
 W_e = sqrt(M*g/(4*K(1)))*ones(4,1);
 U_e = [(W_e/(Ku(1)*Mtau(1)));u5;0;0;0];
 X_e = [x1;x2;x3;0;0;0;x7;x8;x9;0;0;0;W_e;x17;0;0;0];
@@ -60,7 +60,7 @@ X_e = [x1;x2;x3;0;0;0;x7;x8;x9;0;0;0;W_e;x17;0;0;0];
 JA = jacobian(dX,Xs.');
 JB = jacobian(dX,Us.');
 
-%% Define Discrete-Time BeagleBone Dynamics
+%% Define Discrete-Time MCU Dynamics
 
 T = 0.01; % Sample period (s)- 100Hz
 ADC = 3.3/((2^12)-1); % 12-bit ADC Quantization
@@ -97,14 +97,14 @@ D = [0, 0, 0, 0, 0, 0, 0, 0;
      0, 0, 0, 0, 0, 0, 0, 0];
 
 %% Discrete-Time System
-
-#sysdt = c2d(ss(A,B,C,D),T,'zoh');  % Generate Discrete-Time System
+%{
+sysdt = c2d(ss(A,B,C,D),T,'zoh');  % Generate Discrete-Time System
 
 #Adt = sysdt.a;
 #Bdt = sysdt.b;
 #Cdt = sysdt.c;
 #Ddt = sysdt.d;
-
+%}
 %% System Characteristics
 
 poles = eig(A);
@@ -114,6 +114,6 @@ plot(poles,'*');
 grid on;
 title('Discrete System Eigenvalues')
 
-cntr = rank(ctrb(A,B))
+cntr = rank(ctrb(A,B));
 
-obs = rank(obsv(A,C))
+obs = rank(obsv(A,C));

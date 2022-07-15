@@ -3,7 +3,7 @@ clc;
 close all;
 
 %% Load Data
-adb = importdata('datafiles/mga_v2_adb.dat');
+adb = importdata('mga_v2_adb.dat');
 
 beta = adb.data(:,1);
 alpha = adb.data(:,2);
@@ -33,4 +33,4 @@ hold on;
 plot(alpha_star,adb_star_hat(:,5),'linewidth',1); % plot function estimate
 legend('Data','Estimate');
 
-dlmwrite("datafiles/adb_w_hat.txt", adb_w_hat,' ', 0, 0);
+dlmwrite("adb_w_hat.txt", adb_w_hat,' ', 0, 0);
