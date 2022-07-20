@@ -210,34 +210,3 @@ legend('Left Elevon','Right Elevon','Rudder');
 title('Surface Deflection Input PWM Signals');
 xlabel('Time(s)');
 ylabel('MicroSeconds(\mu s)');
-
-%{
-subplot(2,1,2);
-plot(t,Xest([7,9,11],:).*Rad2Deg);
-legend('\phi_e','\theta_e','\psi_e');
-title('Estimated Attitude');
-xlabel('Time(s)');
-ylabel('Degrees(d)');
-
-figure(4);
-subplot(2,1,1);
-plot(t,e([1,2,3],:));
-legend('e_x','e_y','e_z');
-title('Position prediction error');
-xlabel('Time(s)');
-ylabel('Error meters(m)');
-
-subplot(2,1,2);
-plot(t,e(4,:)*Rad2Deg(1));
-legend('e_\psi');
-title('Hedding prediction error');
-xlabel('Time(s)');
-ylabel('Error degrees(d)');
-
-figure(5);
-plot(t,U);
-legend('U1','U2','U3','U4');
-title('Inputs PWM  Signal');
-xlabel('Time(s)');
-ylabel('Micro Seconds(ms)');
-%}
