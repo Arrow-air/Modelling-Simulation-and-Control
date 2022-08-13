@@ -172,7 +172,9 @@ public class spearhead : RigidBody
 		aVelControlClass[0].PIDRun(state.Step);
 		aVelControlClass[1].PIDRun(state.Step);
 		aVelControlClass[2].PIDRun(state.Step);
-		
+	
+		GD.Print(Input.GetConnectedJoypads());
+		 
 		var rollin = float.Parse(Input.GetJoyAxis(0,0).ToString("0.00"));
 		var pitchin = float.Parse(Input.GetJoyAxis(0,1).ToString("0.00"));
 		var throttle = float.Parse(Input.GetJoyAxis(0,2).ToString("0.00"));
@@ -209,20 +211,17 @@ public class spearhead : RigidBody
 		float theta = aPos.y;
 		float psi = aPos.z;
 		
-		//GD.Print("XPos "+(x).ToString("0.00")+" YPos "+(y).ToString("0.00")+" ZPos "+(z).ToString("0.00")+" Xvel "+(u).ToString("0.00")+" Yvel "+(v).ToString("0.00")+" Zvel "+(w).ToString("0.00")+" Phi "+(phi*todeg).ToString("0.00")+" Theta "+(theta*todeg).ToString("0.00")+" Psi "+(psi*todeg).ToString("0.00"));
-		
 		// Inputs
 		float outp = lPosControlClass[2].PID(-(z+ground),100);
 		//GD.Print(-(z+ground)+ " " +outp); (-1000*throttle + 1000)/2
-		U =  new double[8]{outp,outp,outp,outp,0, pitchin*200 + rollin*200, pitchin*200 - rollin*200, yawin*200};
+		U =  new double[8]{0,0,0,0,(-1000*throttle + 1000)/2, pitchin*200 + rollin*200, pitchin*200 - rollin*200, yawin*200};
 		//U =  new double[8]{0,0,0,0,0,0,0,0};
-		//GD.Print(U[4].ToString() + U[5].ToString() + U[6].ToString() + U[7].ToString());
 		
 		MotorV = new double[5]{Ku[0]*U[0],Ku[0]*U[1],Ku[0]*U[2],Ku[0]*U[3],Ku[1]*U[4]};
-		dl = Ku[2]*U[5]/8;
-		dr = Ku[2]*U[6]/8;
-		drd = Ku[2]*U[7]/8;
-		
+		dl = Ku[2]*U[5]/36;
+		dr = Ku[2]*U[6]/36;
+		drd = Ku[2]*U[7]/36;
+		//GD.Print(dl + " " + dr + " " + drd);
 		// Motors
 		double F1 = K[0]*MotorV[0]*MotorV[0];
 		var F2 = K[0]*MotorV[1]*MotorV[1];
@@ -259,7 +258,7 @@ public class spearhead : RigidBody
 		Fthrust = new Vector3((float)F5, (float)Fn, 0);
 		//Fgravity = new Vector3((float) (-M*g*Math.Sin(theta*todeg)),(float) (-M*g*Math.Cos(phi*todeg)*Math.Cos(theta*todeg)),(float) (M*g*Math.Sin(phi*todeg)*Math.Cos(theta*todeg)));
 		Faerodynamics = new Vector3((float) (0.5* rho * V*V * (S * adb_C[0]+ eS * le_C[0] + eS * re_C[0] + rS * rudder_C[0])),(float) (-0.5 * rho * V*V * (S * adb_C[2] + eS * le_C[2] + eS * re_C[2] + rS * rudder_C[2])),(float) (0.5 * rho * V*V * (S * adb_C[1] + eS * le_C[1] + eS * re_C[1] + rS * rudder_C[1])));
-		//GD.Print(Faerodynamics.y);
+		
 		Mthrust = new Vector3((float) (L1*((F1 + F3) - (F2 + F4)) /*+ Tau5*/),(float) -Taun ,(float) (L2*((F1 + F2) - (F3 + F4))));
 		Maerodynamics = new Vector3((float) (0.5* rho * V*V * C * (S * adb_C[3] + eS * le_C[3] + eS * re_C[3] + rS * rudder_C[3])),(float) (0.5 * rho * V*V * C * (S * adb_C[5] + eS * le_C[5] + eS * re_C[5] + rS * rudder_C[5])),(float) (0.5* rho * V*V * C * (S * adb_C[4] + eS * le_C[4] + eS * re_C[4] + rS * rudder_C[4])));
 
