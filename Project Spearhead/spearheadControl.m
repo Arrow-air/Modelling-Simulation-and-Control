@@ -5,15 +5,15 @@ clc;
 %pkg load control;
 
 %% Import Aerodynamic data
-adb = importdata('datafiles/adb_w_hat.txt');
-l_elevon = importdata('datafiles/le_w_hat.txt');
-r_elevon = importdata('datafiles/re_w_hat.txt');
-rudder = importdata('datafiles/rudder_w_hat.txt');
+adb = importdata('spearheadData/ConfigurationData/adb_w_hat.txt');
+l_elevon = importdata('spearheadData/ConfigurationData/le_w_hat.txt');
+r_elevon = importdata('spearheadData/ConfigurationData/re_w_hat.txt');
+rudder = importdata('spearheadData/ConfigurationData/rudder_w_hat.txt');
 
 %% Dynamic Simulation
 g = 9.81;
 T = 0.01;
-Time = 100;
+Time = 250;
 kT = round(Time/T);
 
 X = zeros(20,kT);
@@ -23,24 +23,24 @@ Y = zeros(6,kT);
 e = zeros(6,kT);
 U = zeros(8,kT);
 
-X(1,1) = 25;
+X(1,1) = 20;
 U_e = [0;0;0;0;0;0;0;0];
 PRef = [0;0;0];
-VRef = [25;0;0];
+VRef = [20;0;0];
 ARef = [0;0;0];
 RRef = [0;0;0];
 
-Kplv = [200,10,100];
-Kilv = [10,5,5];
-Kdlv = [20,10,20];
+Kplv = [20,20,20];
+Kilv = [5,5,5];
+Kdlv = [1,1,1];
 
 Gpidlv1 = pid(Kplv(1),Kilv(1),Kdlv(1),1,T);
 Gpidlv2 = pid(Kplv(2),Kilv(2),Kdlv(2),1,T);
 Gpidlv3 = pid(Kplv(3),Kilv(3),Kdlv(3),1,T);
 
-Kpar = [40,80,25];
-Kiar = [5,5,5];
-Kdar = [0,0,0];
+Kpar = [5,5,5];
+Kiar = [0.5,0.5,0.5];
+Kdar = [3,3,3];
 
 Gpidar1 = pid(Kpar(1),Kiar(1),Kdar(1),1,T);
 Gpidar2 = pid(Kpar(2),Kiar(2),Kdar(2),1,T);
@@ -48,9 +48,9 @@ Gpidar3 = pid(Kpar(3),Kiar(3),Kdar(3),1,T);
 
 Gpidar = [Gpidar1,Gpidar2,Gpidar3];
 
-Kplp = [100,100,10];
-Kilp = [5,5,5];
-Kdlp = [30,30,30];
+Kplp = [10,10,10];
+Kilp = [1,1,1];
+Kdlp = [1,1,1];
 
 Gpidlp1 = pid(Kplp(1),Kilp(1),Kdlp(1),1,T);
 Gpidlp2 = pid(Kplp(2),Kilp(2),Kdlp(2),1,T);
@@ -58,9 +58,9 @@ Gpidlp3 = pid(Kplp(3),Kilp(3),Kdlp(3),1,T);
 
 Gpidlp = [Gpidlp1,Gpidlp2,Gpidlp3];
 
-Kpap = [70,70,70];
-Kiap = [8,8,8];
-Kdap = [50,50,50];
+Kpap = [8,8,8];
+Kiap = [1,1,1];
+Kdap = [5,5,5];
 
 Gpidap1 = pid(Kpap(1),Kiap(1),Kdap(1),1,T);
 Gpidap2 = pid(Kpap(2),Kiap(2),Kdap(2),1,T);
@@ -110,21 +110,21 @@ for k = 1:kT-1
     Elv(:,k) = (VRef - uvw(:,k))';
 
     pqr(:,k) = Xest(4:6,k);
-    %Ear(:,k) = (RRef - pqr(:,k))';
+    Ear(:,k) = (RRef - pqr(:,k))';
 
     xyz(:,k) = Xest(7:9,k);
     Elp(:,k) = (PRef - xyz(:,k))';
 
     pts(:,k) = Xest(10:12,k);
-    %Eap(:,k) = (ARef - pts(:,k))';
+    Eap(:,k) = (ARef - pts(:,k))';
 
     ulv(1) = lsim(Gpidlv1,Elv(1,k));
     ulv(2) = lsim(Gpidlv2,Elv(2,k));
     ulv(3) = lsim(Gpidlv3,Elv(3,k));
 
-    Ua = spearheadAttitudeFW(ARef,pts(:,k),Kpap,pqr(:,k),sqrt(uvw(1,k)^2 + uvw(2,k)^2 + uvw(3,k)^2));
-    Ear(:,k) = Ua(1:3);
-    pqrRef = Ua(4:6);
+    %Ua = spearheadAttitudeFW(ARef,pts(:,k),Kpap,pqr(:,k),sqrt(uvw(1,k)^2 + uvw(2,k)^2 + uvw(3,k)^2));
+    %Ear(:,k) = Ua(1:3);
+    %pqrRef = Ua(4:6);
 
     uar(1) = lsim(Gpidar1,Ear(1,k));
     uar(2) = lsim(Gpidar2,Ear(2,k));
@@ -134,25 +134,27 @@ for k = 1:kT-1
     ulp(2) = lsim(Gpidlp2,Elp(2,k));
     ulp(3) = lsim(Gpidlp3,Elp(3,k));
 
-    %uap(1) = lsim(Gpidap1,Eap(1,k));
-    %uap(2) = lsim(Gpidap2,Eap(2,k));
-    %uap(3) = lsim(Gpidap3,Eap(3,k));
+    uap(1) = lsim(Gpidap1,Eap(1,k));
+    uap(2) = lsim(Gpidap2,Eap(2,k));
+    uap(3) = lsim(Gpidap3,Eap(3,k));
 
-    U(:,k) =  min(1000,max(-1000,[0;0;0;0;ulv(1) + ulv(3) + ulp(3); (uar(1)+pqrRef(1))/2 + (uar(2)+pqrRef(2))/2 + ulp(3)/4 + ulp(2)/4; -(uar(1)+pqrRef(1))/2 + (uar(2)+pqrRef(2))/2 + ulp(3)/4 + ulp(2)/4; (uar(1)+pqrRef(3)) + ulv(2) + ulp(2)/2])); %} Constraint Saturation
+
+    U(:,k) =  min(1000,max(-1000,[0;0;0;0;ulv(1) + ulv(2) + ulv(3) + ulp(3)/2; uar(1)/2 + uar(2)/2 + uap(1)/2 + uap(2)/2 + ulp(3)/2; -uar(1)/2 + uar(2)/2 - uap(1)/2 + uap(2)/2 + ulp(3)/2; uar(3) + uap(3) + ulv(2)])); %} Constraint Saturation
+    %U(:,k) =  min(1000,max(-1000,[0;0;0;0;ulv(1) + ulv(3) + ulp(3); (uar(1)+pqrRef(1))/2 + (uar(2)+pqrRef(2))/2 + ulp(3)/4 + ulp(2)/4; -(uar(1)+pqrRef(1))/2 + (uar(2)+pqrRef(2))/2 + ulp(3)/4 + ulp(2)/4; (uar(1)+pqrRef(3)) + ulv(2) + ulp(2)/2])); %} Constraint Saturation
 
 %%  Simulation
-%{
+
     K1 = spearheadModel(k, Xest(:,k)         ,U(:,k),adb,l_elevon,r_elevon,rudder); % Runge-Kutta4 Integration Nonlinear Dynamics
     K2 = spearheadModel(k, Xest(:,k) + K1*T/2,U(:,k),adb,l_elevon,r_elevon,rudder);
     K3 = spearheadModel(k, Xest(:,k) + K2*T/2,U(:,k),adb,l_elevon,r_elevon,rudder);
     K4 = spearheadModel(k, Xest(:,k) + K3*T  ,U(:,k),adb,l_elevon,r_elevon,rudder);
     X(:,k+1) = Xest(:,k) + (1/6)*(K1 + 2*K2 + 2*K3 + K4)*T;
-%}
 
+%{
     t_span = [0,T];
     xode = ode45(@(t,X) spearheadModel(t,Xest(:,k),U(:,k),adb,l_elevon,r_elevon,rudder),t_span,Xest(:,k)); % Runge-Kutta45 Integration Nonlinear Dynamics
     X(:,k+1) = xode.y(:,end);
-
+%}
 end
 
 %PROT = profile("info");
@@ -205,6 +207,13 @@ xlabel('Time(s)');
 ylabel('MicroSeconds(\mu s)');
 
 figure(7);
+plot(t,X(18:20,:),'linewidth',2);
+legend('Left Elevon','Right Elevon','Rudder');
+title('Surface Deflection Angles');
+xlabel('Time(s)');
+ylabel('Degrees(\deg)');
+
+figure(8);
 plot(t,U(6:8,:),'linewidth',2);
 legend('Left Elevon','Right Elevon','Rudder');
 title('Surface Deflection Input PWM Signals');

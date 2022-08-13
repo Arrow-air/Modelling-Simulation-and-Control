@@ -1,11 +1,12 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://mastergeometry_a_v2 v1.obj" type="ArrayMesh" id=1]
+[ext_resource path="res://mg_b_v1.obj" type="ArrayMesh" id=1]
 [ext_resource path="res://scripts/spearhead.cs" type="Script" id=2]
 [ext_resource path="res://scripts/FrontCam.cs" type="Script" id=3]
 [ext_resource path="res://scripts/RearCam.cs" type="Script" id=4]
-[ext_resource path="res://scripts/SideCam.cs" type="Script" id=5]
+[ext_resource path="res://scripts/RightCam.cs" type="Script" id=5]
 [ext_resource path="res://scripts/Environment.cs" type="Script" id=6]
+[ext_resource path="res://scripts/LeftCam.cs" type="Script" id=7]
 
 [sub_resource type="BoxShape" id=1]
 extents = Vector3( 329.762, 89.6088, 348.398 )
@@ -33,49 +34,61 @@ uv1_triplanar = true
 
 [sub_resource type="CubeMesh" id=3]
 material = SubResource( 4 )
-size = Vector3( 40000, 1, 40000 )
+size = Vector3( 40000, 10, 40000 )
 
 [node name="Environment" type="Spatial"]
 script = ExtResource( 6 )
 
 [node name="RearCam" type="Camera" parent="."]
-transform = Transform( -4.37114e-08, 0.707107, -0.707107, 0, 0.707107, 0.707107, 1, 3.09086e-08, -3.09086e-08, -250, 200, 0 )
+transform = Transform( -4.37114e-08, 0.707107, -0.707107, 0, 0.707107, 0.707107, 1, 3.09086e-08, -3.09086e-08, -800, 450, 0 )
 fov = 120.0
 near = 0.01
 far = 1000.0
 script = ExtResource( 4 )
 
 [node name="FrontCam" type="Camera" parent="."]
-transform = Transform( -4.37114e-08, -0.707107, 0.707107, 0, 0.707107, 0.707107, -1, 3.09086e-08, -3.09086e-08, 100, 200, 0 )
+transform = Transform( -4.37114e-08, -0.707107, 0.707107, 0, 0.707107, 0.707107, -1, 3.09086e-08, -3.09086e-08, 100, 450, 0 )
 fov = 120.0
 near = 0.01
 far = 1000.0
 script = ExtResource( 3 )
 
-[node name="SideCam" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 200, 200 )
+[node name="RightCam" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, -280, 450, 650 )
 fov = 120.0
 near = 0.01
 far = 1000.0
 script = ExtResource( 5 )
 
+[node name="LeftCam" type="Camera" parent="."]
+transform = Transform( -1, 6.18173e-08, -6.18173e-08, 0, 0.707107, 0.707107, 8.74228e-08, 0.707107, -0.707107, -280, 450, -650 )
+fov = 120.0
+near = 0.01
+far = 1000.0
+script = ExtResource( 7 )
+
 [node name="spearhead" type="RigidBody" parent="."]
-transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 77, 50, 0 )
-mass = 10.0
+transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 143.68, 0 )
+mass = 20.0
 can_sleep = false
 script = ExtResource( 2 )
 
 [node name="Position3D" type="Position3D" parent="spearhead"]
 
 [node name="CollisionShape" type="CollisionShape" parent="spearhead"]
-transform = Transform( 0.612503, 0, 0, 0, 0.612503, 0, 0, 0, 0.612503, 77, 13, 0 )
+transform = Transform( 1.58, 0, 0, 0, 2.1, 0, 0, 0, 2, 270, 45, 0 )
 visible = false
 shape = SubResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="spearhead"]
-transform = Transform( 0.6, 0, 0, 0, -2.62268e-08, 0.6, 0, -0.6, -2.62268e-08, 0, 0, 0 )
+transform = Transform( 0.4, 0, 0, 0, -1.74846e-08, 0.4, 0, -0.4, -1.74846e-08, 0, 0, 0 )
 mesh = ExtResource( 1 )
 material/0 = SubResource( 5 )
+
+[node name="State" type="Label3D" parent="spearhead"]
+transform = Transform( 0.00151891, -0.843466, 0.53718, 0.00238481, 0.537182, 0.843463, -0.999996, -7.37382e-08, 0.00282744, 676.318, 234.697, 5.91256e-05 )
+pixel_size = 1.5
+text = "Hello, World !"
 
 [node name="Ground" type="StaticBody" parent="."]
 
@@ -85,4 +98,3 @@ shape = SubResource( 2 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Ground"]
 mesh = SubResource( 3 )
-material/0 = null
