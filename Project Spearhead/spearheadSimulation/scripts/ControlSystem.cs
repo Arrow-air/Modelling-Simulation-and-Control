@@ -39,19 +39,19 @@ public class ControlSystem
 		
 		prevError = Error;
 		
-		float sumPID = saturation(P + I + D);
+		float sumPID = saturation(P + I + D,-1000,1000);
 		return(sumPID);
 	}
 	
-	float saturation(float data)
+	public float saturation(float data, float min, float max)
 	{
-		if (data > 1000)
+		if (data > max)
 		{
-			data = 1000;
+			data = max;
 		}
-		if (data < 0)
+		if (data < min)
 		{
-			data = 0;
+			data = min;
 		}
 		return(data);
 	}

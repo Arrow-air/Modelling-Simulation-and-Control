@@ -2,7 +2,7 @@ function [dX] = spearheadModel(k,X,U,adb,l_elevon,r_elevon,rudder)
 %% Xdot = f(X,U)
 
 %% Mass of the VTOL Craft as Taken From CAD
-M = 20;
+M = 16;
 g = 9.81;
 rho = 1.225; % sea level air density
 
@@ -16,9 +16,9 @@ eS = 0.28*0.58;% Elevon Planform Area chord x span
 rS = 0.32*0.30;% Rudder Planform Area chord x span
 
 %% Mass Moment of Inertia about the COM As Taken From CAD
-Ixx = 5.061E+05;
-Iyy = 5.061E+05;
-Izz = 10.011E+05;
+Ixx = 8.734;
+Iyy = 5.592;
+Izz = 13.623;
 
 %% X = [u v w p q r x y z phi theta psi w1 w2 w3 w4 w5 dl dr drd]
 % Linear and Angular Velocity in Fb (m/s and rads/s)

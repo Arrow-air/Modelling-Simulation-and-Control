@@ -69,7 +69,7 @@ script = ExtResource( 7 )
 
 [node name="spearhead" type="RigidBody" parent="."]
 transform = Transform( -1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 143.68, 0 )
-mass = 20.0
+mass = 15.13
 can_sleep = false
 script = ExtResource( 2 )
 

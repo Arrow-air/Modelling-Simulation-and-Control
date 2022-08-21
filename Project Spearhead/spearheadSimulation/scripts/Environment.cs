@@ -7,7 +7,7 @@ public class Environment : Spatial
 	public Camera rearCam;
 	public Camera rightCam;
 	public Camera leftCam;
-	public Label3D state;
+	public Label3D stateLabel;
 	private Spatial spearheadPos;
 	private RigidBody spearheadVel;
 	
@@ -19,6 +19,7 @@ public class Environment : Spatial
 	private int viewState;
 	private double todeg;
 	private float ground;
+	private float yaw;
 	
 	public override void _Ready()
 	{
@@ -27,20 +28,21 @@ public class Environment : Spatial
 		rightCam = GetNode<Camera>("/root/Environment/RightCam");
 		leftCam = GetNode<Camera>("/root/Environment/LeftCam");
 		rearCam = GetNode<Camera>("/root/Environment/RearCam");
-		state = GetNode<Label3D>("/root/Environment/spearhead/State");
+		stateLabel = GetNode<Label3D>("/root/Environment/spearhead/State");
 		spearheadPos = GetNode<Spatial>("/root/Environment/spearhead");
 		spearheadVel = GetNode<RigidBody>("/root/Environment/spearhead");
 		
 		viewState = 0;
 		todeg = 180/Math.PI;
 		ground = 143.68f;
+		yaw = 180f;
 	}
 	public override void _Process(float delta)
 	{
 		Vel = new Vector3(spearheadVel.LinearVelocity.x,spearheadVel.LinearVelocity.z,-spearheadVel.LinearVelocity.y);
-		aVel = new Vector3(spearheadVel.AngularVelocity.x,spearheadVel.AngularVelocity.z,-spearheadVel.AngularVelocity.y);
+		aVel = new Vector3(-spearheadVel.AngularVelocity.x,-spearheadVel.AngularVelocity.z,-spearheadVel.AngularVelocity.y);
 		Pos = new Vector3(spearheadPos.GlobalTranslation.x, spearheadPos.GlobalTranslation.z, -spearheadPos.GlobalTranslation.y);
-		aPos = new Vector3(spearheadPos.Rotation.x, spearheadPos.Rotation.z, spearheadPos.Rotation.y);
+		aPos = new Vector3(-spearheadPos.Rotation.x, -spearheadPos.Rotation.z, -spearheadPos.Rotation.y);
 		
 		float u = Vel.x;
 		float v = Vel.y;
@@ -52,13 +54,13 @@ public class Environment : Spatial
 		
 		float x = Pos.x;
 		float y = Pos.y;
-		float z = Pos.z;
+		float z = Pos.z + ground;
 		
 		float phi = aPos.x;
 		float theta = aPos.y;
-		float psi = aPos.z;
+		float psi = aPos.z - (float)Math.PI;
 		
-		state.Text = "XPos "+(x).ToString("0.00")+" YPos "+(y).ToString("0.00")+" ZPos "+(-(z+ground)).ToString("0.00")+" Xvel "+(u).ToString("0.00")+" Yvel "+(v).ToString("0.00")+" Zvel "+(w).ToString("0.00")+" Phi "+(phi*todeg).ToString("0.00")+" Theta "+(theta*todeg).ToString("0.00")+" Psi "+(psi*todeg).ToString("0.00");
+		stateLabel.Text = "XPos "+(x).ToString("0.00")+" YPos "+(y).ToString("0.00")+" ZPos "+(-z).ToString("0.00")+" Xvel "+(u).ToString("0.00")+" Yvel "+(v).ToString("0.00")+" Zvel "+(w).ToString("0.00")+" Phi "+(phi*todeg).ToString("0.00")+" Theta "+(theta*todeg).ToString("0.00")+" Psi "+(psi*todeg).ToString("0.00");
 		
 		if (Input.IsActionPressed("ui_down"))
 		{

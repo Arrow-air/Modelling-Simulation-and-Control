@@ -2,7 +2,7 @@ clear;
 close all;
 clc;
 
-%pkg load control;
+pkg load control;
 
 %% Import Aerodynamic data
 adb = importdata('spearheadData/ConfigurationData/adb_w_hat.txt');
@@ -12,8 +12,8 @@ rudder = importdata('spearheadData/ConfigurationData/rudder_w_hat.txt');
 
 %% Dynamic Simulation
 g = 9.81;
-T = 0.01;
-Time = 250;
+T = 0.001;
+Time = 5;
 kT = round(Time/T);
 
 X = zeros(20,kT);
@@ -23,24 +23,24 @@ Y = zeros(6,kT);
 e = zeros(6,kT);
 U = zeros(8,kT);
 
-X(1,1) = 20;
+X(:,1) = [(2.0251e+01)/1;1.8674e-03;5.7923e-04;0;0;0;0;0;0;0;0;0;0;0;0;0;7.6444e+02;2.0557e+01;2.0557e+01;-7.0587e-03];
 U_e = [0;0;0;0;0;0;0;0];
 PRef = [0;0;0];
 VRef = [20;0;0];
 ARef = [0;0;0];
 RRef = [0;0;0];
 
-Kplv = [20,20,20];
-Kilv = [5,5,5];
-Kdlv = [1,1,1];
+Kplv = [0.02,0.02,0.02];
+Kilv = [0.005,0.005,0.005];
+Kdlv = [0.01,0.01,0.01];
 
 Gpidlv1 = pid(Kplv(1),Kilv(1),Kdlv(1),1,T);
 Gpidlv2 = pid(Kplv(2),Kilv(2),Kdlv(2),1,T);
 Gpidlv3 = pid(Kplv(3),Kilv(3),Kdlv(3),1,T);
 
-Kpar = [5,5,5];
-Kiar = [0.5,0.5,0.5];
-Kdar = [3,3,3];
+Kpar = [0.5,0.5,0.5];
+Kiar = [0.05,0.05,0.05];
+Kdar = [0.3,0.3,0.3];
 
 Gpidar1 = pid(Kpar(1),Kiar(1),Kdar(1),1,T);
 Gpidar2 = pid(Kpar(2),Kiar(2),Kdar(2),1,T);
@@ -48,8 +48,8 @@ Gpidar3 = pid(Kpar(3),Kiar(3),Kdar(3),1,T);
 
 Gpidar = [Gpidar1,Gpidar2,Gpidar3];
 
-Kplp = [10,10,10];
-Kilp = [1,1,1];
+Kplp = [1,1,1];
+Kilp = [0.1,0.1,0.1];
 Kdlp = [1,1,1];
 
 Gpidlp1 = pid(Kplp(1),Kilp(1),Kdlp(1),1,T);
@@ -58,9 +58,9 @@ Gpidlp3 = pid(Kplp(3),Kilp(3),Kdlp(3),1,T);
 
 Gpidlp = [Gpidlp1,Gpidlp2,Gpidlp3];
 
-Kpap = [8,8,8];
-Kiap = [1,1,1];
-Kdap = [5,5,5];
+Kpap = [0.8,0.8,0.8];
+Kiap = [0.1,0.1,0.1];
+Kdap = [0.5,0.5,0.5];
 
 Gpidap1 = pid(Kpap(1),Kiap(1),Kdap(1),1,T);
 Gpidap2 = pid(Kpap(2),Kiap(2),Kdap(2),1,T);
