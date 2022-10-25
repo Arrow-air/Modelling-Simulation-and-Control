@@ -1,8 +1,10 @@
+%% TEST CONTROL FILE FOR OCTAVE, WILL NOT WORK IN MATLAB
+
 clear;
 close all;
 clc;
 
-pkg load control;
+%pkg load control;
 
 %% Import Aerodynamic data
 adb = importdata('spearheadData/ConfigurationData/adb_w_hat.txt');
@@ -23,6 +25,7 @@ Y = zeros(6,kT);
 e = zeros(6,kT);
 U = zeros(8,kT);
 
+% INITIALISE AT TRIM, THESE ARE THE TRIM VALUES
 X(:,1) = [(2.0251e+01)/1;1.8674e-03;5.7923e-04;0;0;0;0;0;0;0;0;0;0;0;0;0;7.6444e+02;2.0557e+01;2.0557e+01;-7.0587e-03];
 U_e = [0;0;0;0;0;0;0;0];
 PRef = [0;0;0];

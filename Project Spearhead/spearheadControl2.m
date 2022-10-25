@@ -1,3 +1,4 @@
+%% TEST CONTROL FILE FOR OCTAVE, WILL NOT WORK IN MATLAB
 clear;
 close all;
 clc;

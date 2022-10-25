@@ -1,0 +1,15 @@
+clear;
+clc;
+close all;
+%%
+adb = importdata('spearheadData/ConfigurationData/adb_w_hat.txt');
+alpha = (-90:90);
+beta = 0;
+Cm = zeros(180);
+
+for k = 1:180
+    data = adbCoefficients(alpha(k),beta,adb);
+    Cm(k) = data(5);
+end
+
+plot(x);
